@@ -138,7 +138,7 @@ art['ERIC'].frames[4]=new Image();art['ERIC'].frames[4].src='data:image/png;base
 // Death Match: single continuous life bar, endless 2/5 opponents.
 let deathKills=0,deathHP=100,deathLastOpponent=-1,deathSubmitting=false,deathScores=[],deathLoading=false;
 // Set this to your deployed Cloudflare Worker URL to share scores worldwide.
-const LEADERBOARD_API='';
+const LEADERBOARD_API='https://surg-fighter-leaderboard.drjess2023.workers.dev';
 function chooseMode(n){gameType=['versus','computer','deathmatch'][n];pick=[0,3];locked=[false,gameType!=='versus'];mode='select'}
 function deathmatchStart(){deathKills=0;deathHP=100;deathLastOpponent=-1;deathDefeated=new Set();deathSubmitting=false;deathNext()}
 function deathNext(){
