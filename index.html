@@ -16,7 +16,7 @@ const P={bg:'#a5b895',light:'#e4edcf',mid:'#8fa68c',dark:'#4d675d',ink:'#1c302c'
 function rect(x,y,w,h,col){g.fillStyle=col;g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}function line(x,y,x2,y2,col){g.strokeStyle=col;g.lineWidth=1;g.beginPath();g.moveTo(Math.round(x)+.5,Math.round(y)+.5);g.lineTo(Math.round(x2)+.5,Math.round(y2)+.5);g.stroke()}
 const glyph={A:['01110','10001','10001','11111','10001','10001','10001'],B:['11110','10001','10001','11110','10001','10001','11110'],C:['01111','10000','10000','10000','10000','10000','01111'],D:['11110','10001','10001','10001','10001','10001','11110'],E:['11111','10000','10000','11110','10000','10000','11111'],F:['11111','10000','10000','11110','10000','10000','10000'],G:['01111','10000','10000','10111','10001','10001','01111'],H:['10001','10001','10001','11111','10001','10001','10001'],I:['11111','00100','00100','00100','00100','00100','11111'],J:['00111','00010','00010','00010','10010','10010','01100'],K:['10001','10010','10100','11000','10100','10010','10001'],L:['10000','10000','10000','10000','10000','10000','11111'],M:['10001','11011','10101','10101','10001','10001','10001'],N:['10001','11001','10101','10011','10001','10001','10001'],O:['01110','10001','10001','10001','10001','10001','01110'],P:['11110','10001','10001','11110','10000','10000','10000'],Q:['01110','10001','10001','10001','10101','10010','01101'],R:['11110','10001','10001','11110','10100','10010','10001'],S:['01111','10000','10000','01110','00001','00001','11110'],T:['11111','00100','00100','00100','00100','00100','00100'],U:['10001','10001','10001','10001','10001','10001','01110'],V:['10001','10001','10001','10001','10001','01010','00100'],W:['10001','10001','10001','10101','10101','10101','01010'],X:['10001','10001','01010','00100','01010','10001','10001'],Y:['10001','10001','01010','00100','00100','00100','00100'],Z:['11111','00001','00010','00100','01000','10000','11111'],0:['01110','10011','10101','10101','11001','10001','01110'],1:['00100','01100','00100','00100','00100','00100','01110'],2:['01110','10001','00001','00010','00100','01000','11111'],3:['11110','00001','00001','01110','00001','00001','11110'],4:['00010','00110','01010','10010','11111','00010','00010'],5:['11111','10000','10000','11110','00001','00001','11110'],6:['01111','10000','10000','11110','10001','10001','01110'],7:['11111','00001','00010','00100','01000','01000','01000'],8:['01110','10001','10001','01110','10001','10001','01110'],9:['01110','10001','10001','01111','00001','00001','11110'],'!':['00100','00100','00100','00100','00100','00000','00100'],':':['00000','00100','00100','00000','00100','00100','00000'],'-':['00000','00000','00000','11111','00000','00000','00000'],'.':['00000','00000','00000','00000','00000','00100','00100'],'/':['00001','00001','00010','00100','01000','10000','10000'],' ':['00000','00000','00000','00000','00000','00000','00000']};
 function txt(t,x,y,s=1,color=P.ink,align='left'){t=String(t).toUpperCase();let w=t.length*6*s;if(align==='center')x-=w/2;if(align==='right')x-=w;for(let i=0;i<t.length;i++){let rows=glyph[t[i]]||glyph[' '];for(let yy=0;yy<7;yy++)for(let xx=0;xx<5;xx++)if(rows[yy][xx]==='1')rect(x+i*6*s+xx*s,y+yy*s,s,s,color)}}
-const chars=[{name:'JESS',role:'AGILE',super:'FLYING SCALPEL',skin:'#d8b58b',hair:'#202c2a',scrub:'#658e90',trim:'#d6e6cb',speed:1.75,power:7,reach:15,scale:.84},{name:'MATT',role:'BALANCED',super:'CODE BLUE COMBO',skin:'#d7ae8d',hair:'#70513a',scrub:'#608b83',trim:'#d3e5d4',speed:1.32,power:10,reach:17,scale:1},{name:'NIKHIL',role:'RUSHDOWN',super:'RAPID RESPONSE',skin:'#986e4e',hair:'#1c2524',scrub:'#697a9e',trim:'#c8d8e0',speed:1.62,power:8,reach:17,scale:1},{name:'DAMO',role:'GRAPPLER',super:'EMERGENCY LAP',skin:'#d6a581',hair:'#d6a581',scrub:'#7b9170',trim:'#dce7bd',speed:1.04,power:15,reach:21,scale:1}];
+const chars=[{name:'JESS',role:'AGILE',super:'WRAPTURE',skin:'#d8b58b',hair:'#202c2a',scrub:'#658e90',trim:'#d6e6cb',speed:1.75,power:7,reach:15,scale:.84},{name:'MATT',role:'BALANCED',super:'NUTCRACKER',skin:'#d7ae8d',hair:'#70513a',scrub:'#608b83',trim:'#d3e5d4',speed:1.32,power:10,reach:17,scale:1},{name:'NIKHIL',role:'RUSHDOWN',super:'FLYING SCALPEL',skin:'#986e4e',hair:'#1c2524',scrub:'#697a9e',trim:'#c8d8e0',speed:1.62,power:8,reach:17,scale:1},{name:'DAMO',role:'GRAPPLER',super:'EMERGENCY LAP',skin:'#d6a581',hair:'#d6a581',scrub:'#7b9170',trim:'#dce7bd',speed:1.04,power:15,reach:21,scale:1}];
 
 const art={};
 art['NIKHIL']={portrait:new Image(),frames:[]};
@@ -158,9 +158,42 @@ function deathNext(){
 }
 function deathFinish(){mode='deathend';deathSubmitting=true;deathLoadScores();showDeathEntry()}
 function deathVictory(){deathDefeated.add(pick[1]);deathKills++;deathHP=Math.min(100,Math.max(0,fighters[0].hp)+8);deathNext()}
+let deathSyncStatus='CONNECTING TO WORLDWIDE LEADERBOARD';
 function deathLocalScores(){try{return JSON.parse(localStorage.getItem('surgDeathScores')||'[]')}catch(e){return []}}
 function deathSaveLocal(entry){try{const arr=deathLocalScores();arr.push(entry);arr.sort((a,b)=>b.score-a.score||a.at.localeCompare(b.at));localStorage.setItem('surgDeathScores',JSON.stringify(arr.slice(0,30)))}catch(e){}}
-async function deathLoadScores(){deathLoading=true;deathScores=deathLocalScores();if(LEADERBOARD_API){try{const r=await fetch(LEADERBOARD_API.replace(/\/$/,'')+'/scores');if(r.ok){const j=await r.json();if(Array.isArray(j.scores))deathScores=j.scores}}catch(e){}}deathLoading=false}
+async function deathLoadScores(){
+ deathLoading=true;
+ deathScores=deathLocalScores();
+ if(LEADERBOARD_API){
+  try{
+   const r=await fetch(LEADERBOARD_API.replace(/\/$/,'')+'/scores',{cache:'no-store'});
+   if(!r.ok)throw new Error('HTTP '+r.status);
+   const j=await r.json();
+   if(!Array.isArray(j.scores))throw new Error('Invalid scores response');
+   deathScores=j.scores;
+   deathSyncStatus='WORLDWIDE SCORES CONNECTED';
+  }catch(e){deathSyncStatus='OFFLINE: SHOWING LOCAL SCORES ('+e.message+')';console.error('Surg Fighter leaderboard load failed:',e)}
+ }else deathSyncStatus='LOCAL SCORES ONLY';
+ deathLoading=false;
+}
+async function deathSubmitScore(entry){
+ deathSyncStatus='UPLOADING SCORE...';
+ if(!LEADERBOARD_API){deathSyncStatus='LOCAL ONLY: NO SERVER CONFIGURED';return}
+ try{
+  const r=await fetch(LEADERBOARD_API.replace(/\/$/,'')+'/scores',{
+   method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)
+  });
+  const responseText=await r.text();
+  if(!r.ok)throw new Error('HTTP '+r.status+' '+responseText.slice(0,100));
+  deathSyncStatus='SCORE UPLOADED SUCCESSFULLY';
+  await deathLoadScores();
+  if(deathSyncStatus==='WORLDWIDE SCORES CONNECTED')deathSyncStatus='SCORE UPLOADED - WORLDWIDE SCORES';
+ }catch(e){
+  deathSyncStatus='UPLOAD FAILED: '+e.message;
+  console.error('Surg Fighter leaderboard upload failed:',e);
+ }
+}
+
 function showDeathEntry(){
  let overlay=document.getElementById('death-entry');
  if(!overlay){
@@ -168,7 +201,7 @@ function showDeathEntry(){
   overlay.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.82);font-family:monospace;color:white';
   overlay.innerHTML='<form style="background:#17171d;border:4px solid #eee;padding:24px;text-align:center;max-width:90vw"><div style="font-size:22px;font-weight:bold">DEATH MATCH OVER</div><div id="death-entry-score" style="margin:14px">0 KOs</div><label for="death-initials">ENTER 3 INITIALS</label><br><input id="death-initials" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" value="AAA" style="font:24px monospace;width:90px;text-align:center;margin:12px;background:white;color:black"><br><button type="submit" style="font:18px monospace;padding:10px 20px">SAVE SCORE</button></form>';
   document.body.appendChild(overlay);
-  overlay.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const raw=overlay.querySelector('input').value;const name=raw.toUpperCase().replace(/[^A-Z]/g,'').slice(0,3).padEnd(3,'A');const entry={name,score:deathKills,character:chars[pick[0]].name,at:new Date().toISOString()};overlay.style.display='none';deathSaveLocal(entry);deathLoadScores();if(LEADERBOARD_API){fetch(LEADERBOARD_API.replace(/\/$/,'')+'/scores',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)}).then(()=>deathLoadScores()).catch(()=>{});}deathSubmitting=false;});
+  overlay.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const raw=overlay.querySelector('input').value;const name=raw.toUpperCase().replace(/[^A-Z]/g,'').slice(0,3).padEnd(3,'A');const entry={name,score:deathKills,character:chars[pick[0]].name,at:new Date().toISOString()};overlay.style.display='none';deathSaveLocal(entry);deathSubmitScore(entry);deathSubmitting=false;});
  }
  overlay.querySelector('#death-entry-score').textContent=deathKills+' KOs';overlay.style.display='flex';
 }
@@ -178,7 +211,7 @@ function deathEndScreen(){
  txt('HIGH SCORES',160,62,1,C.white,'center');
  txt('RANK  NAME   KOs',160,78,1,C.silver,'center');
  for(let i=0;i<Math.min(7,deathScores.length);i++){const v=deathScores[i];txt(String(i+1).padStart(2,'0')+'    '+v.name+'    '+String(v.score).padStart(4,' '),160,89+i*10,1,i===0?C.white:C.silver,'center')}
- txt(LEADERBOARD_API?'WORLDWIDE SCORES':'LOCAL SCORES - SET UP CLOUDFLARE',160,165,1,C.silver,'center');
+ txt(deathSyncStatus.slice(0,49),160,165,1,C.silver,'center');
  
  if(tapped('Enter')&&!deathSubmitting)resetSelect();
 }
@@ -418,7 +451,58 @@ function superEffects(){
     for(let j=0;j<7;j++)rect(foe.x-dir*(j*11),foe.y-65+j%3*9,8,3,j%2?C.white:C.black);
    }
   }else if(fx.type==='JESS'){
-   // Three distinct flying scalpels with trailing speed lines, fired in sequence.
+   // WRAPTURE: two animated theatre ropes uncoil, lash and wrap the challenger.
+   const t=fx.age;
+   for(let k=0;k<2;k++){
+    const reach=Math.min(1,Math.max(0,(t-k*5)/18));
+    if(reach<=0)continue;
+    const startX=f.x+dir*12,startY=f.y-55+k*17;
+    const endX=startX+(foe.x-startX)*reach;
+    const endY=startY+((foe.y-52+k*16)-startY)*reach;
+    g.save();g.lineWidth=3;g.strokeStyle=k?C.silver:C.white;
+    g.beginPath();g.moveTo(startX,startY);
+    for(let j=1;j<=16;j++){
+     const u=j/16;
+     const x=startX+(endX-startX)*u;
+     const y=startY+(endY-startY)*u+Math.sin(u*12-t*.65+k*2)*8*u;
+     g.lineTo(x,y);
+    }
+    g.stroke();g.lineWidth=1;g.strokeStyle=C.black;g.stroke();
+    if(t>18+k*5&&t<43){
+     const cx=foe.x,cy=foe.y-46;
+     for(let loop=0;loop<3;loop++){
+      g.beginPath();g.ellipse(cx,cy+(loop-1)*9,12+Math.sin(t*.4+loop)*2,5,0,0,Math.PI*2);
+      g.strokeStyle=loop%2?C.white:C.silver;g.lineWidth=2;g.stroke();
+     }
+    }
+    g.restore();
+   }
+   if([19,25,32].includes(t)){burst(foe.x,foe.y-46,18);shake=5}
+  }else if(fx.type==='MATT'){
+   // NUTCRACKER: a rising low blow, converging impact arcs and stars.
+   const t=fx.age, cx=foe.x,cy=foe.y-19;
+   if(t<36){
+    const extend=Math.min(1,t/13),sx=f.x+dir*13,sy=f.y-25;
+    const ex=sx+(cx-sx)*extend,ey=sy+(cy-sy)*extend;
+    g.save();g.strokeStyle=C.white;g.lineWidth=5;
+    g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
+    g.strokeStyle=C.black;g.lineWidth=2;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
+    if(t>=11){
+     let radius=6+(t-11)*2.3;
+     for(let side of [-1,1]){
+      g.strokeStyle=(t%4<2)?C.white:C.silver;g.lineWidth=3;
+      g.beginPath();g.arc(cx+side*3,cy,radius,side===1?-1.1:Math.PI-1.1,side===1?1.1:Math.PI+1.1);g.stroke();
+     }
+     for(let j=0;j<8;j++){
+      const ang=j*Math.PI/4+t*.1,dist=9+(t-11)*1.5;
+      rect(cx+Math.cos(ang)*dist,cy+Math.sin(ang)*dist,3,3,j%2?C.white:C.black);
+     }
+    }
+    g.restore();
+   }
+   if(t===13||t===22){burst(cx,cy,26);shake=10}
+  }else if(fx.type==='NIKHIL'){
+   // FLYING SCALPEL: reuse Jess's original three-scalpel animation and damage.
    for(let k=0;k<3;k++){
     let t=fx.age-k*5;if(t<0||t>36)continue;
     let x=f.x+dir*(19+t*5.3),y=f.y-49+k*10+Math.sin(t*.25)*2;
@@ -430,49 +514,6 @@ function superEffects(){
     g.restore();
     if(!fx['hit'+k]&&Math.abs(x-foe.x)<13&&Math.abs(y-(foe.y-45))<34){fx['hit'+k]=true;let dmg=foe.guard?2:6;foe.hp=Math.max(0,foe.hp-dmg);foe.hurt=foe.guard?3:7;burst(x,y,12);shake=3}
    }
-  }else if(fx.type==='MATT'){
-   // Code Blue Combo: three advancing strikes, shockwaves and ECG flashes.
-   const beats=[5,14,23];
-   for(let j=0;j<beats.length;j++){
-    let t=fx.age-beats[j];if(t<0||t>13)continue;
-    let x=f.x+dir*(20+j*8+Math.min(t,7)*2), y=f.y-48+(j%2)*13;
-    g.save();g.translate(Math.round(x),Math.round(y));g.scale(dir,1);
-    for(let q=0;q<4;q++)rect(-10-q*5,(q%2)*3,9-q,2,q%2?C.silver:C.white);
-    let r=2+t*2;
-    g.strokeStyle=t%3?C.white:C.black;g.lineWidth=2;
-    g.beginPath();g.arc(0,0,r,-1.25,1.25);g.stroke();
-    rect(-2,-2,5,5,C.black);rect(-1,-1,3,3,C.white);
-    g.restore();
-   }
-   if(fx.age>=4&&fx.age<34){
-    let phase=fx.age%9, x=f.x+dir*(22+Math.floor(fx.age/9)*8);
-    for(let k=0;k<6;k++){
-     let yy=f.y-77+(k===2?-5:k===3?5:0);
-     rect(x+dir*(k*5),yy,5,2,k%2?C.white:C.black);
-    }
-   }
-   if([5,14,23].includes(fx.age)){burst(f.x+dir*31,f.y-45,16);shake=5}
-  }else if(fx.type==='NIKHIL'){
-   // Rapid Response: speed-clone silhouettes, repeated lunges and impact stars.
-   let phase=Math.floor(fx.age/7);
-   if(fx.age<37){
-    g.save();g.globalAlpha=.35;
-    for(let j=3;j>=1;j--){
-     let trailX=f.x-dir*(j*8+phase*2);
-     rect(trailX-7,f.y-70,14,8,j%2?C.dark:C.silver);
-     rect(trailX-10,f.y-61,20,23,C.mid);
-     rect(trailX-13,f.y-39,9,31,C.dark);
-     rect(trailX+4,f.y-39,9,31,C.dark);
-    }
-    g.restore();
-    let x=f.x+dir*(18+((fx.age*5)%53)),y=f.y-56+(phase%3)*8;
-    g.save();g.translate(Math.round(x),Math.round(y));g.scale(dir,1);
-    for(let j=0;j<5;j++)rect(-j*8,((j%2)*4)-2,11,2,j%2?C.silver:C.white);
-    poly([[0,-6],[11,0],[0,6],[-3,0]],C.black);
-    poly([[1,-4],[8,0],[1,4]],C.white);
-    g.restore();
-   }
-   if(fx.age%7===0&&fx.age<35){burst(f.x+dir*(25+phase*7),f.y-51,12);shake=3}
   }else if(fx.type==='DAMO'){
    // Emergency Laparotomy: grappler charge, grab, dramatic ground slam.
    let a=fx.age;
