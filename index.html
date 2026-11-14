@@ -621,3 +621,4 @@ function tick(){frame++;g.save();if(shake){g.translate(Math.floor(Math.random()*
  }
  if(mode==='gameover'){rect(28,63,264,52,C.black);txt('MATCH OVER',160,71,2,C.white,'center');txt(gameType==='computer'?'TRY AGAIN':chars[pick[wins[0]>wins[1]?0:1]].name+' WINS',160,95,1,C.white,'center');txt('PRESS ENTER',160,123,1,C.black,'center');if(tapped('Enter'))resetSelect()}}g.restore();prev={...keys};requestAnimationFrame(tick)}requestAnimationFrame(tick);
 </script></body></html>
+
