@@ -191,7 +191,7 @@ art['ERIC'].frames[4]=new Image();art['ERIC'].frames[4].src='data:image/png;base
 let deathKills=0,deathHP=100,deathLastOpponent=-1,deathSubmitting=false,deathScores=[],deathLoading=false;
 // Set this to your deployed Cloudflare Worker URL to share scores worldwide.
 const LEADERBOARD_API='https://surg-fighter-leaderboard.drjess2023.workers.dev';
-function chooseMode(n){gameType=['versus','computer','deathmatch'][n];pick=[0,3];locked=[false,gameType!=='versus'];mode='select'}
+function chooseMode(n){if(n===3){mode='leaderboard';deathLoadScores();return}gameType=['deathmatch','versus','computer'][n];pick=[0,3];locked=[false,gameType!=='versus'];mode='select'}
 function deathmatchStart(){deathKills=0;deathHP=100;deathLastOpponent=-1;deathDefeated=new Set();deathSubmitting=false;deathNext()}
 function deathNext(){
  // Every available standard fighter must be beaten before either boss appears.
@@ -409,7 +409,7 @@ function sprite(f,px,py,scale=1,portrait=false){
  else if(keys[f.p===0?'s':'ArrowDown'])pose=f.ch.name==='JESS'?5:f.ch.artName==='ERIC'?5:2;
  else if(f.walk>0&&Math.floor(frame/15)%2)pose=f.ch.artName==='KRISTENNE'?5:1;
  const im=a.frames[pose];if(!im||!im.complete||!im.naturalWidth){oldSprite(f,px,py,scale,portrait);return}
- const factor=scale*(f.ch.name==='JESS'?.88:f.ch.name==='RICHIE'?.746:f.ch.name==='SAM'?.708:f.ch.name==='XAV'?.941:f.ch.name==='NIKHIL'?.958333:1);
+ const factor=scale*(f.ch.name==='JESS'?.88:f.ch.name==='RICHIE'?.746:f.ch.name==='SAM'?.708:f.ch.name==='XAV'?.941:f.ch.name==='NIKHIL'?.958333:f.ch.name==='IAN'?.89:1);
  // Damo's poses use the same native pixel height as Matt and Nikhil.
  // Never upscale the large source kick/jump art or interpolate it.
  const damoFit=f.ch.name==='DAMO'?Math.min(1,94/im.height):1;
@@ -454,14 +454,27 @@ function titleScreen(){
 }
 function gameModeScreen(){
  rect(0,0,320,180,C.silver);for(let y=0;y<180;y+=5)rect(0,y,320,1,C.pale);
- rect(0,0,320,43,C.black);txt('SURG FIGHTER II',160,12,2,C.white,'center');
- txt('CHOOSE GAME MODE',160,53,1,C.black,'center');
- const choices=['1P VS 2P','1P VS COMPUTER','DEATH MATCH'];
- for(let i=0;i<3;i++){let y=70+i*26;rect(37,y,246,23,i===menuChoice?C.black:C.pale);txt((i===menuChoice?'> ':'  ')+choices[i],160,y+7,1,i===menuChoice?C.white:C.black,'center')}
- txt('CLICK OPTION OR PRESS ENTER',160,158,1,C.black,'center');
- if(tapped('KeyW')||tapped('ArrowUp'))menuChoice=(menuChoice+2)%3;
- if(tapped('KeyS')||tapped('ArrowDown'))menuChoice=(menuChoice+1)%3;
+ rect(0,0,320,43,C.black);txt('SURG FIGHTER',160,12,2,C.white,'center');
+ txt('CHOOSE GAME MODE',160,49,1,C.black,'center');
+ const choices=['DEATH MATCH','1P VS 2P','1P VS COMPUTER','VIEW LEADERBOARD'];
+ for(let i=0;i<choices.length;i++){let y=63+i*22;rect(37,y,246,20,i===menuChoice?C.black:C.pale);txt((i===menuChoice?'> ':'  ')+choices[i],160,y+5,1,i===menuChoice?C.white:C.black,'center')}
+ txt('CLICK OPTION OR PRESS ENTER',160,160,1,C.black,'center');
+ if(tapped('KeyW')||tapped('ArrowUp'))menuChoice=(menuChoice+3)%4;
+ if(tapped('KeyS')||tapped('ArrowDown'))menuChoice=(menuChoice+1)%4;
  if(tapped('Enter')||tapped('KeyF')||tapped('KeyJ'))chooseMode(menuChoice);
+}
+function menuLeaderboardScreen(){
+ rect(0,0,320,180,C.black);
+ txt('WORLDWIDE LEADERBOARD',160,9,2,C.white,'center');
+ txt('RANK   NAME    KOs',160,34,1,C.silver,'center');
+ if(deathLoading)txt('LOADING SCORES...',160,78,1,C.white,'center');
+ else if(!deathScores.length)txt('NO SCORES YET',160,78,1,C.white,'center');
+ for(let i=0;i<Math.min(10,deathScores.length);i++){
+  const v=deathScores[i];txt(String(i+1).padStart(2,'0')+'     '+String(v.name||'').slice(0,3)+'     '+String(v.score).padStart(4,' '),160,47+i*10,1,i===0?C.white:C.silver,'center');
+ }
+ txt(deathSyncStatus.slice(0,49),160,155,1,C.silver,'center');
+ txt('ESC / ENTER TO RETURN',160,168,1,C.white,'center');
+ if(tapped('Escape')||tapped('Backspace')||tapped('Enter')||tapped('KeyF')||tapped('KeyJ'))mode='menu';
 }
 // Mouse, touchscreen swipe and wheel navigation for character selection.
 let selectPointerStart=null;
@@ -470,7 +483,8 @@ c.addEventListener('pointerdown',e=>{
  const r=c.getBoundingClientRect(),x=(e.clientX-r.left)*320/r.width,y=(e.clientY-r.top)*180/r.height;
  if(mode==='select'){selectPointerStart={id:e.pointerId,x,y};return}
  if(mode==='title'){mode='menu';return}
- if(mode==='menu'&&y>=70&&y<145){menuChoice=Math.min(2,Math.floor((y-70)/26));chooseMode(menuChoice);return}
+ if(mode==='menu'&&y>=63&&y<151){menuChoice=Math.min(3,Math.floor((y-63)/22));chooseMode(menuChoice);return}
+ if(mode==='leaderboard'){mode='menu';return}
  if(mode==='champion'||mode==='gameover')resetSelect();
 });
 c.addEventListener('pointerup',e=>{
@@ -774,7 +788,8 @@ function selectScreen(){
  txt(chars[pick[0]].name,8,146,1,C.white);
  txt(gameType==='computer'?'ARCADE':gameType==='deathmatch'?'ENDLESS SURVIVAL':chars[pick[1]].name,312,146,1,C.white,'right');
  txt('A/D SELECT  W/S SCROLL  F CONFIRM',160,159,1,C.white,'center');
- txt(bossesPlayable()?'ALL FIGHTERS UNLOCKED':'KCLEM + THE DON LOCKED',160,170,1,C.silver,'center');
+ // Secret bosses are not advertised on character selection.
+
  if(annTicks>0){annTicks--;rect(47,112,226,16,C.black);txt(announcement,160,116,1,C.white,'center')}
  const roster=bossesPlayable()?chars.map((_,i)=>i):chars.map((_,i)=>i).slice(0,-2);
  const stepPick=(current,delta)=>roster[(roster.indexOf(current)+delta+roster.length)%roster.length];
@@ -794,7 +809,7 @@ function selectScreen(){
   else{wins=[0,0];round=1;startRound()}
  }
 }
-function tick(){frame++;g.save();if(shake){g.translate(Math.floor(Math.random()*5)-2,Math.floor(Math.random()*5)-2);shake--}if(mode==='title'){titleScreen()}else if(mode==='menu'){gameModeScreen()}else if(mode==='select'){selectScreen()}else{bg();if(mode==='fight'){if(annTicks<40){if(gameType==='computer'||gameType==='deathmatch')updateCPU();updateF(fighters[0],0);updateF(fighters[1],1)}if(roundTick++%60===0&&annTicks<=0)timer--;if((fighters[0].hp<=0||fighters[1].hp<=0||timer<=0)&&annTicks<=0){let winner=fighters[0].hp===fighters[1].hp?-1:fighters[0].hp>fighters[1].hp?0:1;if(winner>=0)wins[winner]++;announcement=winner<0?'DRAW':chars[pick[winner]].name+' WINS';annTicks=115;mode='roundover'}}sprite(fighters[0],fighters[0].x,fighters[0].y,fighters[0].ch.scale);sprite(fighters[1],fighters[1].x,fighters[1].y,fighters[1].ch.scale);superEffects();effects();hud();if(annTicks>0){annTicks--;if(annTicks>10){rect(0,76,320,23,C.black);txt(announcement,160,83,announcement.length>19?1:2,C.white,'center')}}if(mode==='roundover'&&annTicks<=0){if(gameType==='deathmatch'){if(wins[0]>=1)deathVictory();else deathFinish()}else if(wins[0]>=2||wins[1]>=2){if(gameType==='computer'&&wins[0]>=2)arcadeNext();else mode='gameover'}else{round++;startRound()}}if(mode==='deathend'){deathEndScreen()}if(mode==='champion'){
+function tick(){frame++;g.save();if(shake){g.translate(Math.floor(Math.random()*5)-2,Math.floor(Math.random()*5)-2);shake--}if(mode==='title'){titleScreen()}else if(mode==='menu'){gameModeScreen()}else if(mode==='leaderboard'){menuLeaderboardScreen()}else if(mode==='select'){selectScreen()}else{bg();if(mode==='fight'){if(annTicks<40){if(gameType==='computer'||gameType==='deathmatch')updateCPU();updateF(fighters[0],0);updateF(fighters[1],1)}if(roundTick++%60===0&&annTicks<=0)timer--;if((fighters[0].hp<=0||fighters[1].hp<=0||timer<=0)&&annTicks<=0){let winner=fighters[0].hp===fighters[1].hp?-1:fighters[0].hp>fighters[1].hp?0:1;if(winner>=0)wins[winner]++;announcement=winner<0?'DRAW':chars[pick[winner]].name+' WINS';annTicks=115;mode='roundover'}}sprite(fighters[0],fighters[0].x,fighters[0].y,fighters[0].ch.scale);sprite(fighters[1],fighters[1].x,fighters[1].y,fighters[1].ch.scale);superEffects();effects();hud();if(annTicks>0){annTicks--;if(annTicks>10){rect(0,76,320,23,C.black);txt(announcement,160,83,announcement.length>19?1:2,C.white,'center')}}if(mode==='roundover'&&annTicks<=0){if(gameType==='deathmatch'){if(wins[0]>=1)deathVictory();else deathFinish()}else if(wins[0]>=2||wins[1]>=2){if(gameType==='computer'&&wins[0]>=2)arcadeNext();else mode='gameover'}else{round++;startRound()}}if(mode==='deathend'){deathEndScreen()}if(mode==='champion'){
  rect(17,44,286,98,C.black);
  txt('SURGICAL CHAMPION!',160,53,2,C.white,'center');
  txt('ALL CHALLENGES DEFEATED',160,80,1,C.white,'center');
